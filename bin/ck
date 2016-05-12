@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.push File.expand_path('../../lib', __FILE__)
+
+require 'crysknife'
+require 'commander'
+
+class CrysknifeCLI
+  include Commander::Methods
+
+  def run
+    program :version, Crysknife::Version.version
+    program :description,    'A CTF framework and exploit development library.'
+    program :help, 'Author', 'servalan0x7c2 <servalan0x7c2@gmail.com>'
+    program :help, 'GitHub', 'https://github.com/servalan0x7c2/crysknife'
+    program :help_formatter, :compact
+
+    global_option('--verbose') { $verbose = true }
+
+    command :base_convert do |c|
+      c.syntax = 'ck base_convert [value] [from_base] [to_base]'
+      c.description = 'Converts a string from one base to another'
+      c.action do |args, options|
+        puts args.first.to_s.convert_base(args[1].to_i, args[2].to_i)
+      end
+    end
+
+    default_command :help
+
+    run!
+  end # def run
+end # class CrysknifeCLI
+
+CrysknifeCLI.new.run
